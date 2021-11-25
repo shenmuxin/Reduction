@@ -385,7 +385,7 @@ def main():
 
     # 创建模型
     model = build_model()
-    tf.keras.utils.plot_model(model, to_file='./shape.png' ,show_shapes=True)
+    tf.keras.utils.plot_model(model, to_file='./model/shape.png' ,show_shapes=True)
     # 训练
     # train(model, train_db, test_dataset, test_labels, epochs=200)
 
