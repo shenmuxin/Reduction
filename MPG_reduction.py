@@ -168,7 +168,7 @@ def train(model, train_db, test_dataset, test_labels, epochs=5, isprint=True, is
 #     pred = model(tf.constant(test_dataset.values))
 #     return pred
 
-def predict(model, test_dataset, test_labels):
+def predict_v1(model, test_dataset, test_labels):
     """
     预测分别打包绘制
     """
@@ -204,31 +204,31 @@ def predict(model, test_dataset, test_labels):
     return None
 
 
-def predict_v2(model, test_dataset, test_labels):
-    """
-    预测绘制总图
-    """
-    title_list = ['Cylinders', 'Displacement', 'Horsepower', 'Weight', 'Acceleration', 'Model Year']
+# def predict_all(model, test_dataset, test_labels):
+#     """
+#     预测绘制总图
+#     """
+#     title_list = ['Cylinders', 'Displacement', 'Horsepower', 'Weight', 'Acceleration', 'Model Year']
 
-    pred = model(tf.constant(test_dataset.values))
-    plt.figure(figsize=(10, 8))
-    plt.plot(pred, label='Full')
-    plt.plot(test_labels.values, label='True')
-    plt.xlabel('Num')
-    plt.ylabel('MPG')
-    for i in range(len(title_list)):
-        # 相应列置零
-        dataset = test_dataset[:]
-        dataset[title_list[i]] = 0
-        print(dataset)
-        # 训练完成得到预测输出
-        pred = model(tf.constant(dataset.values))
-        plt.plot(pred, label=title_list[i])
-        plt.legend()
-    plt.show()
-    return None
+#     pred = model(tf.constant(test_dataset.values))
+#     plt.figure(figsize=(10, 8))
+#     plt.plot(pred, label='Full')
+#     plt.plot(test_labels.values, label='True')
+#     plt.xlabel('Num')
+#     plt.ylabel('MPG')
+#     for i in range(len(title_list)):
+#         # 相应列置零
+#         dataset = test_dataset[:]
+#         dataset[title_list[i]] = 0
+#         print(dataset)
+#         # 训练完成得到预测输出
+#         pred = model(tf.constant(dataset.values))
+#         plt.plot(pred, label=title_list[i])
+#         plt.legend()
+#     plt.show()
+#     return None
 
-def predict_v1(model, test_dataset, test_labels):
+def predict(model, test_dataset, test_labels):
     """
     分别预测
     """
@@ -242,13 +242,150 @@ def predict_v1(model, test_dataset, test_labels):
     plt.ylabel('MPG')
     plt.show()
 
+
+def predict_v2(model, test_dataset, test_labels):
+    
+    title_list = ['Cylinders', 'Displacement', 'Horsepower', 'Weight', 'Acceleration', 'Model Year']
+
+    # pred = model(tf.constant(test_dataset.values))
+    # plt.subplot(3, 5, 1)
+    # plt.plot(pred, label='Pred')
+    # plt.plot(test_labels.values, label='True')
+    # plt.legend()
+    # plt.xlabel('Num')
+    # plt.ylabel('MPG')
+    # plt.title('Full')
+
+    num = 0
+    for i in range(len(title_list)):
+        for j in range(i+1, len(title_list)):
+            num += 1
+            dataset = test_dataset[:]
+            dataset[title_list[i]] = 0
+            dataset[title_list[j]] = 0
+
+            print(dataset)
+            # 训练完成得到预测输出
+            pred = model(tf.constant(dataset.values))
+
+            plt.subplots_adjust(wspace=0.2, hspace=0.7)
+            plt.subplot(3, 5, num)
+            plt.plot(pred, label='Pred')
+            plt.plot(test_labels.values, label='True')
+            plt.legend()
+            plt.xlabel('Num')
+            plt.ylabel('MPG')
+            plt.title(title_list[i]+'+'+title_list[j])
+
+    plt.show()
+    return None
+
+def predict_v3(model, test_dataset, test_labels):
+    title_list = ['Cylinders', 'Displacement', 'Horsepower', 'Weight', 'Acceleration', 'Model Year']
+
+    num = 0
+    for i in range(len(title_list)):
+        for j in range(i+1, len(title_list)):
+            for k in range(j+1, len(title_list)):
+                num += 1
+                dataset = test_dataset[:]
+                dataset[title_list[i]] = 0
+                dataset[title_list[j]] = 0
+                dataset[title_list[k]] = 0
+
+                print(dataset)
+                # 训练完成得到预测输出
+                pred = model(tf.constant(dataset.values))
+
+                plt.subplots_adjust(wspace=0.25, hspace=0.7)
+                plt.subplot(4, 5, num)
+                plt.plot(pred, label='Pred')
+                plt.plot(test_labels.values, label='True')
+                plt.legend()
+                plt.xlabel('Num')
+                plt.ylabel('MPG')
+                plt.title(title_list[i]+'+'+title_list[j]+'+'+title_list[k], fontsize=8)
+
+    plt.show()
+    return None    
+        
+def predict_v4(model, test_dataset, test_labels):
+    title_list = ['Cylinders', 'Displacement', 'Horsepower', 'Weight', 'Acceleration', 'Model Year']
+
+    num = 0
+    for i in range(len(title_list)):
+        for j in range(i+1, len(title_list)):
+            for k in range(j+1, len(title_list)):
+                for v in range(k+1, len(title_list)):
+
+                    num += 1
+                    dataset = test_dataset[:]
+                    dataset[title_list[i]] = 0
+                    dataset[title_list[j]] = 0
+                    dataset[title_list[k]] = 0
+                    dataset[title_list[v]] = 0
+
+                    print(dataset)
+                    # 训练完成得到预测输出
+                    pred = model(tf.constant(dataset.values))
+
+                    plt.subplots_adjust(wspace=0.25, hspace=0.7)
+                    plt.subplot(3, 5, num)
+                    plt.plot(pred, label='Pred')
+                    plt.plot(test_labels.values, label='True')
+                    plt.legend()
+                    plt.xlabel('Num')
+                    plt.ylabel('MPG')
+                    plt.title(title_list[i]+'+'+title_list[j]+'+'+title_list[k]+'+'+title_list[v], fontsize=7)
+
+    plt.show()
+    return None    
+
+
+def predict_v5(model, test_dataset, test_labels):
+    title_list = ['Cylinders', 'Displacement', 'Horsepower', 'Weight', 'Acceleration', 'Model Year']
+
+    num = 0
+    for i in range(len(title_list)):
+        for j in range(i+1, len(title_list)):
+            for k in range(j+1, len(title_list)):
+                for v in range(k+1, len(title_list)):
+                    for u in range(v+1, len(title_list)):
+
+
+                        num += 1
+                        dataset = test_dataset[:]
+                        dataset[title_list[i]] = 0
+                        dataset[title_list[j]] = 0
+                        dataset[title_list[k]] = 0
+                        dataset[title_list[v]] = 0
+                        dataset[title_list[u]] = 0
+
+                        print(dataset)
+                        # 训练完成得到预测输出
+                        pred = model(tf.constant(dataset.values))
+
+                        plt.subplots_adjust(wspace=0.25, hspace=0.7)
+                        plt.subplot(3, 2, num)
+                        plt.plot(pred, label='Pred')
+                        plt.plot(test_labels.values, label='True')
+                        plt.legend()
+                        plt.xlabel('Num')
+                        plt.ylabel('MPG')
+                        plt.title(title_list[i]+'+'+title_list[j]+'+'+title_list[k]+'+'+title_list[v]+'+'+title_list[u], fontsize=10)
+
+    plt.show()
+    return None    
+
+
+
 def main():
     # 获得数据集
     train_db, test_dataset, test_labels = get_db()
 
     # 创建模型
     model = build_model()
-    tf.keras.utils.plot_model(model, to_file='./model/shape.png' ,show_shapes=True)
+    tf.keras.utils.plot_model(model, to_file='./shape.png' ,show_shapes=True)
     # 训练
     # train(model, train_db, test_dataset, test_labels, epochs=200)
 
@@ -262,8 +399,12 @@ def main():
     # print(test_dataset)
 
     # 预测
-    predict(model, test_dataset, test_labels)
-    # predict_v1(model, test_dataset, test_labels)
+    predict_v1(model, test_dataset, test_labels)
+    predict_v2(model, test_dataset, test_labels)
+    predict_v3(model, test_dataset, test_labels)
+    predict_v4(model, test_dataset, test_labels)
+    predict_v5(model, test_dataset, test_labels)
+
     
     return None
 
