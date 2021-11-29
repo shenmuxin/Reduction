@@ -202,33 +202,46 @@ def predict_v1(model, test_dataset, test_labels):
     预测分别打包绘制
     """
     title_list = ['Cylinders', 'Displacement', 'Horsepower', 'Weight', 'Acceleration', 'Model Year']
+    num = 0
+    test_loss = metrics.MeanAbsoluteError()  # 创建指标
 
     pred = model(tf.constant(test_dataset.values))
+    test_labels = tf.reshape(test_labels, (-1, 1))
+    test_loss.update_state(test_labels, pred)  # 指标更新
     plt.subplot(3, 3, 1)
     plt.plot(pred, label='Pred')
-    plt.plot(test_labels.values, label='True')
+    plt.plot(test_labels, label='True')
     plt.legend()
     plt.xlabel('Num')
     plt.ylabel('MPG')
     plt.title('Full')
+    plt.text(3, -2, str(test_loss.result().numpy()), fontsize=15, c='green')
+    plt.axis('off')
+    
     
 
+
     for i in range(len(title_list)):
-        # 相应列置零
-        dataset = test_dataset[:]
+        num += 1
+        test_loss.reset_state()  # 指标置零
+
+        dataset = test_dataset[:]  # 相应列置零
         dataset[title_list[i]] = 0
         print(dataset)
         # 训练完成得到预测输出
         pred = model(tf.constant(dataset.values))
-
+        test_loss.update_state(test_labels, pred)  # 指标更新
+        
         plt.subplots_adjust(wspace=0.2, hspace=0.7)
-        plt.subplot(3, 3, i+2)
+        plt.subplot(3, 3, num+1)
         plt.plot(pred, label='Pred')
-        plt.plot(test_labels.values, label='True')
+        plt.plot(test_labels, label='True')
         plt.legend()
         plt.xlabel('Num')
         plt.ylabel('MPG')
         plt.title(title_list[i])
+        plt.text(3, -2, str(test_loss.result().numpy()), fontsize=15, c='green')
+        plt.axis('off')
 
     plt.show()
     return None
@@ -261,6 +274,8 @@ def predict_v2(model, test_dataset, test_labels):
             plt.ylabel('MPG')
             plt.title(title_list[i]+'+'+title_list[j])
             plt.text(3, -2, str(test_loss.result().numpy()), fontsize=15, c='green')
+            plt.axis('off')
+
 
 
     plt.show()
@@ -297,6 +312,8 @@ def predict_v3(model, test_dataset, test_labels):
                 plt.ylabel('MPG')
                 plt.title(title_list[i]+'+'+title_list[j]+'+'+title_list[k], fontsize=8)
                 plt.text(3, -2, str(test_loss.result().numpy()), fontsize=15, c='green')
+                plt.axis('off')
+
 
     plt.show()
     return None    
@@ -334,6 +351,8 @@ def predict_v4(model, test_dataset, test_labels):
                     plt.ylabel('MPG')
                     plt.title(title_list[i]+'+'+title_list[j]+'+'+title_list[k]+'+'+title_list[v], fontsize=7)
                     plt.text(3, -2, str(test_loss.result().numpy()), fontsize=15, c='green')
+                    plt.axis('off')
+
 
     plt.show()
     return None    
@@ -375,6 +394,8 @@ def predict_v5(model, test_dataset, test_labels):
                         plt.ylabel('MPG')
                         plt.title(title_list[i]+'+'+title_list[j]+'+'+title_list[k]+'+'+title_list[v]+'+'+title_list[u], fontsize=10)
                         plt.text(3, -2, str(test_loss.result().numpy()), fontsize=15, c='green')
+                        plt.axis('off')
+
 
     plt.show()
     return None    
@@ -401,7 +422,7 @@ def main():
     # print(test_dataset)
 
     # 预测
-    # predict_v1(model, test_dataset, test_labels)
+    predict_v1(model, test_dataset, test_labels)
     predict_v2(model, test_dataset, test_labels)
     predict_v3(model, test_dataset, test_labels)
     predict_v4(model, test_dataset, test_labels)
